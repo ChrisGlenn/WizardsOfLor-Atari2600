@@ -21,8 +21,8 @@
 Reset:
     CLEAN_START                 ; macro to clear memory
 
-    LDA #$9C                    ; load the hex code for BLACK
-    STA COLUBK                  ; set the background to black
+    LDA #$9C                    ; load the hex code for LIGHT BLUE
+    STA COLUBK                  ; set the background to light blue
 ; *******************************************************************
 ; START A NEW FRAME
 ; *******************************************************************
