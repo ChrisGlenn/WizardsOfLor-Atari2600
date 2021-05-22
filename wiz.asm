@@ -1,4 +1,4 @@
-    processor 6502
+    PROCESSOR 6502
 
 ; *******************************************************************
 ; THE WIZARDS OF LOR (ATARI 2600 PORT)
@@ -15,6 +15,22 @@
     INCLUDE "vcs.h"
     INCLUDE "macro.h"
 
+; *******************************************************************
+; Declare variables starting from memory address $80
+; *******************************************************************
+    SEG.U Variables
+    ORG $80
+
+WizXPos         byte                    ; player x-position
+WizYPos         byte                    ; player y-position
+BarbXPos        byte                    ; barbarian x-position
+BarbYPos        byte                    ; barbarian y-position
+
+
+; *******************************************************************
+; Start our ROM code at memory address $F000
+; *******************************************************************
+
     SEG code
     ORG $F000                   ; set program orgin to $F000
 
@@ -28,16 +44,16 @@ Reset:
 ; *******************************************************************
 ; Turn on the VSYNC/VBLANK (30)
 StartFrame:
-    lda #02
-    sta VBLANK                  ; turn on VBLANK
-    sta VSYNC                   ; turn on VSYNC
+    LDA #02
+    STA VBLANK                  ; turn on VBLANK
+    STA VSYNC                   ; turn on VSYNC
 
     STA WSYNC                   ; generate the 3 lines for VSYNC
     STA WSYNC                   ; generate the 3 lines for VSYNC
     STA WSYNC                   ; generate the 3 lines for VSYNC
 
-    lda #0                      ; turn VSYNC off
-    sta VSYNC
+    LDA #0                      ; turn VSYNC off
+    STA VSYNC
 
 ; GENERATE 37 LINES OF VBLANK
     LDX #37
@@ -46,8 +62,8 @@ RepeatVblank:
     DEX
     BNE RepeatVblank
 
-    lda #0                      ; turn VBLANK off
-    sta VBLANK
+    LDA #0                      ; turn VBLANK off
+    STA VBLANK
 
 ; *******************************************************************
 ; DRAW THE VISIBLE SCANLINES (192)
@@ -59,8 +75,8 @@ DrawScreen:
     BNE DrawScreen
     
 ; OUTPUT 30 LINES OF OVERSCAN
-    lda #2
-    sta VBLANK                  ; turn VBLANK on
+    LDA #2
+    STA VBLANK                  ; turn VBLANK on
 
     LDX #30
 LoopOverscan:
@@ -68,13 +84,32 @@ LoopOverscan:
     DEX
     BNE LoopOverscan
 
-    lda #0                      ; turn VBLANK off
-    sta VBLANK
+    LDA #0                      ; turn VBLANK off
+    STA VBLANK
 
 ; LOOP TO NEXT FRAME
-    jmp StartFrame
+    JMP StartFrame
 
-; COMPLETE ROM SIZE TO 4KB
-    org $FFFC
+; *******************************************************************
+; Declare ROM lookup tables
+; *******************************************************************
+Wizard:
+    .byte #%00000000
+    .byte #%11111001
+    .byte #%01111101
+    .byte #%01111111
+    .byte #%00000001
+    .byte #%01111111
+    .byte #%10111101
+    .byte #%01011001
+    .byte #%00110000
+
+Barbarian:
+    .byte #%00000000
+
+; *******************************************************************
+; Complete ROM size to 4k
+; *******************************************************************
+    ORG $FFFC
     .word Reset
     .word Reset
