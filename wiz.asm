@@ -7,6 +7,9 @@
 ; *******************************************************************
 ;   TODO:
 ;   [] Create Playfield with Tower and Bushes at Bottom
+;   [] Create Player and add Movement
+;   [] Add Missle Firing
+;   [] Add Score
 ; *******************************************************************
 ; *******************************************************************
 ;   include required files with VCS register mapping
@@ -25,6 +28,8 @@ WizXPos         byte                    ; player x-position
 WizYPos         byte                    ; player y-position
 BarbXPos        byte                    ; barbarian x-position
 BarbYPos        byte                    ; barbarian y-position
+TowerHP         byte                    ; tower's hit-points
+Score           byte                    ; player's score
 
 
 ; *******************************************************************
@@ -79,10 +84,10 @@ DrawScreen:
     STA VBLANK                  ; turn VBLANK on
 
     LDX #30
-LoopOverscan:
+RepeatOverscan:
     STA WSYNC
     DEX
-    BNE LoopOverscan
+    BNE RepeatOverscan
 
     LDA #0                      ; turn VBLANK off
     STA VBLANK
@@ -106,6 +111,14 @@ Wizard:
 
 Barbarian:
     .byte #%00000000
+    .byte #%00010010
+    .byte #%00010010
+    .byte #%01011111
+    .byte #%01011111
+    .byte #%01111111
+    .byte #%11010010
+    .byte #%11011110
+    .byte #%10010010
 
 ; *******************************************************************
 ; Complete ROM size to 4k
