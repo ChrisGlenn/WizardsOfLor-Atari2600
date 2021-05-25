@@ -76,11 +76,14 @@ RepeatVblank:
 ; *******************************************************************
 ; DRAW THE VISIBLE SCANLINES (192)
 ; *******************************************************************
-    LDX #192
+    LDX #192                    ; 192 - 20
 DrawScreen:
     STA WSYNC
     DEX
     BNE DrawScreen
+
+; DRAW THE PLAYFIELD
+    
     
 ; OUTPUT 30 LINES OF OVERSCAN
     LDA #2
