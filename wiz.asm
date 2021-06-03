@@ -7,7 +7,8 @@
 ; *******************************************************************
 ;   TODO:
 ;   [] Create Playfield with Tower and Bushes at Bottom
-;   [] Create Player and add Movement
+;   [] Display Player
+;   [] Add Player Movement
 ;   [] Add Missle Firing
 ;   [] Add Score
 ;   [] Add Enemy Movment and Collision
@@ -33,7 +34,10 @@ BarbXPos        byte                    ; barbarian x-position
 BarbYPos        byte                    ; barbarian y-position
 TowerHP         byte                    ; tower's hit-points
 Score           byte                    ; player's score
+Level           byte                    ; game level (enemies get faster the higher it goes)
 
+; Define Constants
+WIZ_HEIGHT = 9                          ; player0 (wizard) sprite height
 
 ; *******************************************************************
 ; Start our ROM code at memory address $F000
@@ -45,8 +49,15 @@ Score           byte                    ; player's score
 Reset:
     CLEAN_START                 ; macro to clear memory
 
-    LDA #$9C                    ; load the hex code for LIGHT BLUE
-    STA COLUBK                  ; set the background to light blue
+    LDA #$00                    ; load the hex code for BLACK
+    STA COLUBK                  ; set the background to black
+
+; Initialize variables (player position, ect.)
+    LDA #20
+    STA WizXPos                 ; player X position
+    LDA #80
+    STA WizYPos                 ; player Y position
+
 ; *******************************************************************
 ; START A NEW FRAME
 ; *******************************************************************
@@ -77,10 +88,10 @@ RepeatVblank:
 ; DRAW THE VISIBLE SCANLINES (192)
 ; *******************************************************************
     LDX #192                    ; 192 - 20
-DrawScreen:
+GameLoop:
     STA WSYNC
     DEX
-    BNE DrawScreen
+    BNE GameLoop
 
 ; DRAW THE PLAYFIELD
     
