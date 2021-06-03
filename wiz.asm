@@ -52,6 +52,9 @@ Reset:
     LDA #$00                    ; load the hex code for BLACK
     STA COLUBK                  ; set the background to black
 
+    LDA #$84                    ; load the hex code for BLUE
+    STA COLUP0                  ; set the player color to blue
+
 ; Initialize variables (player position, ect.)
     LDA #20
     STA WizXPos                 ; player X position
@@ -87,15 +90,22 @@ RepeatVblank:
 ; *******************************************************************
 ; DRAW THE VISIBLE SCANLINES (192)
 ; *******************************************************************
-    LDX #192                    ; 192 - 20
+    LDX #192                    ; 192
 GameLoop:
+.CheckWizardPos:
+    TXA                         ; transfer X to A
+    SEC                         ; set carry flag before subtraction
+    SBC WizYPos                 ; subtract with wizard y-position
+    CMP WIZ_HEIGHT              ; compare wizard height
+    BCC .DrawWizard             ; if result < sprite height go to draw routine
+    lda #0
+.DrawWizard:
+    STA GRP0
+
     STA WSYNC
     DEX
     BNE GameLoop
 
-; DRAW THE PLAYFIELD
-    
-    
 ; OUTPUT 30 LINES OF OVERSCAN
     LDA #2
     STA VBLANK                  ; turn VBLANK on
@@ -212,18 +222,18 @@ Digits:
     .byte %01000100          ; #   #
     .byte %01000100          ; #   #
 
-Wizard:
-    .byte #%00000000        ; 
-    .byte #%11111001        ; #####  #
-    .byte #%01111101        ;  ##### #
+WizardBitmap:
+    .byte #%00110000        ;   ##
+    .byte #%01011001        ;  # ##  #
+    .byte #%10111101        ; # #### #
     .byte #%01111111        ;  #######
     .byte #%00000001        ;        #
     .byte #%01111111        ;  #######
-    .byte #%10111101        ; # #### #
-    .byte #%01011001        ;  # ##  #
-    .byte #%00110000        ;   ##
+    .byte #%01111101        ;  ##### #
+    .byte #%11111001        ; #####  #
+    .byte #%00000000        ; 
 
-Barbarian:
+BarbarianBitmap:
     .byte #%00000000        ;
     .byte #%00010010        ;    #  # 
     .byte #%00010010        ;    #  # 
