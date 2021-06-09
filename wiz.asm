@@ -35,9 +35,12 @@ BarbYPos        byte                    ; barbarian y-position
 TowerHP         byte                    ; tower's hit-points
 Score           byte                    ; player's score
 Level           byte                    ; game level (enemies get faster the higher it goes)
+WizardSpritePtr word                    ; pointer to the P0 sprite lookup table
+BarbSpritePtr   word                    ; pointer to the P1 sprite lookup table
 
 ; Define Constants
 WIZ_HEIGHT = 9                          ; player0 (wizard) sprite height
+BAR_HEIGHT = 9                          ; player1 (barbarian) sprite height
 
 ; *******************************************************************
 ; Start our ROM code at memory address $F000
@@ -87,24 +90,13 @@ RepeatVblank:
     LDA #0                      ; turn VBLANK off
     STA VBLANK
 
-; *******************************************************************
-; DRAW THE VISIBLE SCANLINES (192)
-; *******************************************************************
-    LDX #192                    ; 192
-GameLoop:
-.CheckWizardPos:
-    TXA                         ; transfer X to A
-    SEC                         ; set carry flag before subtraction
-    SBC WizYPos                 ; subtract with wizard y-position
-    CMP WIZ_HEIGHT              ; compare wizard height
-    BCC .DrawWizard             ; if result < sprite height go to draw routine
-    lda #0
-.DrawWizard:
-    STA GRP0
 
+; DRAW THE VISIBLE SCANLINES (192)
+    LDX #192                    ; 192
+GameKernal:
     STA WSYNC
     DEX
-    BNE GameLoop
+    BNE GameKernal
 
 ; OUTPUT 30 LINES OF OVERSCAN
     LDA #2
@@ -222,18 +214,18 @@ Digits:
     .byte %01000100          ; #   #
     .byte %01000100          ; #   #
 
-WizardBitmap:
-    .byte #%00110000        ;   ##
-    .byte #%01011001        ;  # ##  #
-    .byte #%10111101        ; # #### #
+Wizard:
+    .byte #%00000000        ; 
+    .byte #%11111001        ; #####  #
+    .byte #%01111101        ;  ##### #
     .byte #%01111111        ;  #######
     .byte #%00000001        ;        #
     .byte #%01111111        ;  #######
-    .byte #%01111101        ;  ##### #
-    .byte #%11111001        ; #####  #
-    .byte #%00000000        ; 
+    .byte #%10111101        ; # #### #
+    .byte #%01011001        ;  # ##  #
+    .byte #%00110000        ;   ##
 
-BarbarianBitmap:
+Barbarian:
     .byte #%00000000        ;
     .byte #%00010010        ;    #  # 
     .byte #%00010010        ;    #  # 
