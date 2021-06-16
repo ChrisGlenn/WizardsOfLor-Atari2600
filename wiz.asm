@@ -6,7 +6,7 @@
 ; *******************************************************************
 ; *******************************************************************
 ;   TODO:
-;   [] Create Playfield with Tower and Bushes at Bottom
+;   [] Create Playfield Room
 ;   [] Display Player
 ;   [] Add Player Movement
 ;   [] Add Missle Firing
@@ -80,15 +80,15 @@ Reset:
 ; *******************************************************************
 ; Initialize Pointers to correct lookup table addresses
 ; *******************************************************************
-    lda #<WizardSprite
-    sta WizardSpritePtr                 ; lo-byte pointer for wizard table
-    lda #>WizardSprite
-    sta WizardSpritePtr+1               ; hi-byte pointer for wizard table
+    LDA #<WizardSprite
+    STA WizardSpritePtr                 ; lo-byte pointer for wizard table
+    LDA #>WizardSprite
+    STA WizardSpritePtr+1               ; hi-byte pointer for wizard table
 
-    lda #<BarbarianSprite
-    sta BarbSpritePtr                   ; lo-byte pointer for wizard table
-    lda #>BarbarianSprite
-    sta BarbSpritePtr+1                 ; hi-byte pointer for wizard table
+    LDA #<BarbarianSprite
+    STA BarbSpritePtr                   ; lo-byte pointer for wizard table
+    LDA #>BarbarianSprite
+    STA BarbSpritePtr+1                 ; hi-byte pointer for wizard table
 
 ; *******************************************************************
 ; START A NEW FRAME
